@@ -10,7 +10,6 @@ const catchAsync = require('./util/catchAsync');
 const ExpressError = require('./util/expressError');
 
 mongoose.set('strictQuery', false);
-dd
 // const Campground = mongoose.model('Campground', CampgroundSchema);
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
