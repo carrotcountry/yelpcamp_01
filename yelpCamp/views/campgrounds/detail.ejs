@@ -1,7 +1,7 @@
     <%- layout('layouts/boilerplate') %>
     <div class="row">
-        <div class="col-6 offset-3">
-            <div class="card">
+        <div class="col-6 offset-3 mb-5">
+            <div class="card mb-3">
                     <img src="<%= details.image %>" alt="">
                 <div class="card-body">
                     <!-- <h5 class="card-title">Card title</h5> -->
@@ -23,6 +23,22 @@
                     2 days ago
                 </div>
             </div>
-            <a class="card-link btn btn-warning  mt-3" href="/campgrounds">See all Campgrounds</a>
+            <h2>Leave a Review</h2>
+            <form action="/campgrounds/<%= details.id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+                <div>
+                    <label for="rating" class="form-label">Rating</label>
+                    <input type="range" class="form-range" min="1" max="5" name="review[rating]" id="rating">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="body">review</label> <br>
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="5" required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <button class="btn btn-success mt-2">submit</button>
+                <%= details %>
+            </form>
+            <a class="card-link btn btn-warning  mt-4" href="/campgrounds">See all Campgrounds</a>
         </div>
     </div>

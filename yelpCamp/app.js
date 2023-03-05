@@ -3,11 +3,13 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const Joi = require('joi');
-const { campgroundSchema } = require('./schema.js');
+const { campgroundSchema, reviewSchema} = require('./schema.js');
 const methodOverride = require('method-override');
 const Campground = require('./models/Campground');
 const catchAsync = require('./util/catchAsync');
 const ExpressError = require('./util/expressError');
+const Review = require('./models/review')
+
 
 mongoose.set('strictQuery', false);
 // const Campground = mongoose.model('Campground', CampgroundSchema);
@@ -50,6 +52,17 @@ const validateCampground = (req, res, next) => {
     }
 }
 
+const validateReview = (req, res,  next) => {
+    const {error} = reviewSchema.validate(req.body);
+    if (error) {
+        console.log(error);
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    } 
+}
+
 app.get('/', (req, res) => {
     res.render('home');
 })
@@ -72,7 +85,7 @@ app.post('/campgrounds', validateCampground, catchAsync(async (req, res) => {
 }))
 
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
-    const details = await Campground.findById(req.params.id);
+    const details = await Campground.findById(req.params.id).populate('reviews');
     res.render('campgrounds/detail', { details });
 }))
 
@@ -86,12 +99,21 @@ app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res, next
     const update = await Campground.findByIdAndUpdate(id, {... req.body.campground})
     res.redirect(`/campgrounds/${update.id}`)
 }))
-  
+
 app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     await Campground.findByIdAndDelete(req.params.id)
     res.redirect('/campgrounds')
 }));
-  
+
+app.post('/campgrounds/:id/reviews', validateReview, catchAsync( async(req, res)=> {
+    const campground = await Campground.findById(req.params.id);
+    const review =  new Review(req.body.review);
+    campground.reviews.push(review);
+    await review.save(); 
+    await campground.save();
+    res.redirect(`/campgrounds/${campground.id}`)
+}))
+
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
 }) 
