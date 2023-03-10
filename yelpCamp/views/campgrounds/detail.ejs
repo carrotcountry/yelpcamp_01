@@ -1,16 +1,18 @@
-    <%- layout('layouts/boilerplate') %>
+<%- layout('layouts/boilerplate') %>
     <div class="row">
         <div class="col-6 mb-5">
             <div class="card mb-3">
-                    <img src="<%= details.image %>" alt="">
+                <img src="<%= details.image %>" alt="">
                 <div class="card-body">
                     <h5 class="card-title"><%= details.title %></h5>
                     <p class="card-text"><%= details.description%></p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-muted"><%= details.location %></li>
+                    <li class="list-group-item text-muted">
+                        <%= details.location %>
+                    </li>
                     <li class="list-group-item">$<%= details.price%>/night</li>
-                  <!-- <li class="list-group-item">A third item</li> -->
+                    <!-- <li class="list-group-item">A third item</li> -->
                 </ul>
                 <div class="card-body">
                     <a class="card-link btn btn-info" href="/campgrounds/<%=details.id%>/edit">edit</a>
@@ -22,10 +24,11 @@
                     2 days ago
                 </div>
             </div>
-            
             <a class="card-link btn btn-warning  mt-4" href="/campgrounds">See all Campgrounds</a>
-            
         </div>
+
+
+
         <div class="col-6">
             <h2>Leave a Review</h2>
             <form action="/campgrounds/<%= details.id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
@@ -43,17 +46,26 @@
                 <button class="btn btn-success mt-2">submit</button>
             </form>
 
-            <% for(let rev of  details.reviews){ %>
-            <div class="card mb-3">
-                
+            <% for(let rev of details.reviews){ %>
+                <div class="card mb-3">
+
                     <div class=" card-body">
-                        <h5 class="card-title">rating: <%= rev.rating %></h5>
-                        <p class="card-text">Review: <%= rev.body%></p>
-                        <p><%= %></p>
-                        <p><%= %></p>
+                        <h5 class="card-title">rating: <%= rev.rating %>
+                        </h5>
+                        <p class="card-text">Review: <%= rev.body%>
+                        </p>
+                        <p>
+                            <%= %>
+                        </p>
+                        <p>
+                            <%= %>
+                        </p>
                     </div>
+                    <form action="/campgrounds/<%= details.id %>/reviews/<%= rev.id %>?_method=delete" method="POST">
+                        <button class="btn btn-danger">submit</button>
+                    </form>
                 </div>
-                        <% } %>
-            
+                <% } %>
+
         </div>
     </div>
