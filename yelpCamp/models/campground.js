@@ -30,7 +30,9 @@ CampgroundSchema.post('findOneAndDelete', async function(doc) {
     }
 })
 
-const Campground = mongoose.model('Campground', CampgroundSchema);
+// const Campground = mongoose.model('Campground', CampgroundSchema);
 
- module.exports = Campground
+const Campground = mongoose.models.Campground || mongoose.model('Campground', CampgroundSchema);
+
+module.exports = Campground
  
