@@ -21,7 +21,6 @@ const campgroundsRoutes = require('./routes/campground');
 const reviewsRoutes = require('./routes/reviews');
 
 //schema
-const Campground = require('./models/Campground');
 const Review = require('./models/review')
 const { campgroundSchema, reviewSchema } = require('./schema.js');
 

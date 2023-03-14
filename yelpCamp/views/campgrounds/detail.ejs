@@ -8,17 +8,18 @@
                     <p class="card-text"><%= details.description%></p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-muted">
-                        <%= details.location %>
-                    </li>
+                    <li class="list-group-item text-muted"><%= details.location %></li>
+                    <li class="list-group-item">Submitted by <%= details.author.username %></li>
                     <li class="list-group-item">$<%= details.price%>/night</li>
                     <!-- <li class="list-group-item">A third item</li> -->
                 </ul>
                 <div class="card-body">
-                    <a class="card-link btn btn-info" href="/campgrounds/<%=details.id%>/edit">edit</a>
-                    <form class="d-inline" action="/campgrounds/<%=details.id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger" id="deleteBtn">delete</button>
-                    </form>
+                    <% if( currentUser && details.author.equals(currentUser.id) ) {%>
+                        <a class="card-link btn btn-info" href="/campgrounds/<%=details.id%>/edit">edit</a>
+                        <form class="d-inline" action="/campgrounds/<%=details.id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger" id="deleteBtn">delete</button>
+                        </form>
+                    <% } %>
                 </div>
                 <div class="card-footer text-muted">
                     2 days ago
@@ -26,10 +27,8 @@
             </div>
             <a class="card-link btn btn-warning  mt-4" href="/campgrounds">See all Campgrounds</a>
         </div>
-
-
-
         <div class="col-6">
+            <% if(currentUser){%>
             <h2>Leave a Review</h2>
             <form action="/campgrounds/<%= details.id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
                 <div>
@@ -45,27 +44,20 @@
                 </div>
                 <button class="btn btn-success mt-2">submit</button>
             </form>
-
+            <% } %>
             <% for(let rev of details.reviews){ %>
                 <div class="card mb-3">
-
                     <div class=" card-body">
-                        <h5 class="card-title">rating: <%= rev.rating %>
-                        </h5>
-                        <p class="card-text">Review: <%= rev.body%>
-                        </p>
-                        <p>
-                            <%= %>
-                        </p>
-                        <p>
-                            <%= %>
-                        </p>
+                        <h5 class="card-title">rating: <%= rev.rating %></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">By <%= rev.author.username %></h6>
+                        <p class="card-text">Review: <%= rev.body%></p>
+                        <% if(currentUser && rev.author.equals(currentUser.id) ) { %>
+                            <form action="/campgrounds/<%= details.id %>/reviews/<%= rev.id %>?_method=delete" method="POST">
+                                <button class="btn btn-danger">delete</button>
+                            </form>
+                        <% } %>
                     </div>
-                    <form action="/campgrounds/<%= details.id %>/reviews/<%= rev.id %>?_method=delete" method="POST">
-                        <button class="btn btn-danger">submit</button>
-                    </form>
                 </div>
-                <% } %>
-
+            <% } %>
         </div>
     </div>
